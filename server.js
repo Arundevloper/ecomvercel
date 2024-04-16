@@ -11,7 +11,7 @@ import path from "path";
 dotenv.config();
 
 // Connect to the database
-connectDB();
+
 
 // Create Express app
 const app = express();
@@ -42,10 +42,14 @@ app.use((err, req, res, next) => {
 // Port
 const PORT = process.env.PORT || 5000;
 
-// Start the server
+
+connectDB().then(()=>{
 app.listen(PORT, () => {
   console.log(
     `Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
       .white
   );
 });
+
+})
+// Start the server
