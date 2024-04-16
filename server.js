@@ -20,29 +20,39 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Middleware setup
-app.use(cors());
+app.use(cors()); // Enable CORS for all origins during development
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "./client/build")));
-
-// Log HTTP requests to console
-app.use(morgan("dev"));
-
-
-// Routes
-app.use("/api/v1/product/", productRoutes);
-app.use("/api/v1/auth/", authRoutes);
-app.use("/api/v1/category/", categoryRoutes);
+app.use(morgan("dev")); // Logging middleware
 
 // Serve React app
 app.use("*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
+// Routes
+app.use("/api/v1/product/", productRoutes);
+app.use("/api/v1/auth/", authRoutes);
+app.use("/api/v1/category/", categoryRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Internal Server Error" });
+});
+
+// CORS error handling middleware
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    console.log("CORS preflight request received");
+    return res.sendStatus(200);
+  }
+
+  next();
 });
 
 // Port
