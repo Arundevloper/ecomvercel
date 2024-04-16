@@ -22,7 +22,9 @@ const app = express();
 // Middleware setup
 app.use(
   cors({
-    origin: "*", // Allow requests from any origin
+    origin: process.env.CORS_ORIGIN || "*", // Allow requests from specified origin or any origin if not provided
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specified HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow specified headers
   })
 );
 app.use(express.json());
