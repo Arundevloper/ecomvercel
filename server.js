@@ -12,6 +12,9 @@ import { fileURLToPath } from "url";
 // Configure environment variables
 dotenv.config();
 
+// Connect to database and start server
+await connectDB(); // Wait for database connection to establish
+
 // Get current filename and directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,16 +47,6 @@ app.use((err, req, res, next) => {
 // Port
 const PORT = process.env.PORT || 10000;
 
-// Connect to database and start server
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(
-        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
-      );
-    });
-  })
-  .catch((err) => {
-    console.error("Database connection error:", err);
-    process.exit(1); // Exit with failure
-  });
+app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
