@@ -1,14 +1,17 @@
-import mongoose from "mongoose";
-import colors from "colors";
+const mongoose = require("mongoose");
+
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URL);
+    const connectionInstance = await mongoose.connect(
+      "mongodb+srv://arunsharma96025:8N5fNZzIIUIUeL3p@pdfeditor.lu4uirh.mongodb.net/?retryWrites=true&w=majority&appName=PdfEditor"
+    );
     console.log(
-      `Conneted To Mongodb Databse ${conn.connection.host}`.bgMagenta.white
+      `MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`
     );
   } catch (error) {
-    console.log(`Errro in Mongodb ${error}`.bgRed.white);
+    console.log("MongoDB conncetion FAILED", error);
+    process.exit(1);
   }
 };
 
-export default connectDB;
+module.exports = connectDB;
