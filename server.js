@@ -33,10 +33,7 @@ const __dirname=path.dirname(__filename);
   app.use("/api/v1/auth/", authRoutes);
   app.use("/api/v1/category/", categoryRoutes);
 
-  // Serve React app from the build folder
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(process.cwd(), "client", "build", "index.html"));
-  });
+ 
 
   // Error handling middleware
   app.use((err, req, res, next) => {
