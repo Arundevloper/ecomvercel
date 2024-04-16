@@ -20,8 +20,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Middleware setup
+app.use(
+  cors({
+    origin: "*", // Allow requests from any origin
+  })
+);
 app.use(express.json());
-app.use(cors());
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(morgan("dev")); // Logging middleware
 
@@ -42,7 +46,7 @@ app.use((err, req, res, next) => {
 });
 
 // Port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 // Connect to database and start server
 connectDB()
