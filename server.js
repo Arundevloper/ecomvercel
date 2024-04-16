@@ -13,8 +13,8 @@ import { fileURLToPath } from "url";
 dotenv.config();
 
 // Get current filename and directory
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+ const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Create Express app
 const app = express();
@@ -26,13 +26,13 @@ app.use(
   })
 );
 app.use(express.json());
-// app.use(express.static(path.join(__dirname, "./client/build")));
+ app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(morgan("dev")); // Logging middleware
 
 // // Serve React app
-// app.use("*", function (req, res) {
-//   res.sendFile(path.join(__dirname, "./client/build/index.html"));
-// });
+ app.use("*", function (req, res) {
+   res.sendFile(path.join(__dirname, "./client/build/index.html"));
+ });
 
 
 app.use("/",(req,res)=>{
@@ -56,10 +56,8 @@ const PORT = process.env.PORT || 5000;
 connectDB()
   .then(() => {
     
-    app.use("/login", (req, res) => {
-      res.json("i am working g");
-    });
     
+
     app.listen(PORT, () => {
       console.log(
         `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
