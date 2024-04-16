@@ -1,0 +1,51 @@
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/dbConnect.js";
+import cors from "cors";
+import authRoutes from "./routes/authRoute.js";
+import productRoutes from "./routes/productRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import path from "path";
+
+// Configure environment variables
+dotenv.config();
+
+// Connect to the database
+connectDB();
+
+// Create Express app
+const app = express();
+
+// Middleware setup
+app.use(cors());
+app.use(express.json());
+
+// Serve static files from the build folder
+app.use(express.static(path.join(process.cwd(), "client", "build")));
+
+// Handle requests to the root URL
+app.get("/", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "client", "build", "index.html"));
+});
+
+// Routes
+app.use("/api/v1/product/", productRoutes);
+app.use("/api/v1/auth/", authRoutes);
+app.use("/api/v1/category/", categoryRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Internal Server Error");
+});
+
+// Port
+const PORT = process.env.PORT || 5000;
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(
+    `Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
+      .white
+  );
+});
