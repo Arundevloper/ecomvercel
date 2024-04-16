@@ -55,6 +55,11 @@ const PORT = process.env.PORT || 5000;
 // Connect to database and start server
 connectDB()
   .then(() => {
+    
+    app.use("/login", (req, res) => {
+      res.json("i am working g");
+    });
+    
     app.listen(PORT, () => {
       console.log(
         `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
