@@ -24,12 +24,7 @@ const app = express();
 
 // Middleware setup
 app.use(express.json());
-const corsOption = {
-  origin: ["https://ecomvercel.onrender.com/"],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-};
-app.use(cors(corsOption));
+app.use(cors());
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(morgan("dev")); // Logging middleware
 
