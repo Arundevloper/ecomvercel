@@ -11,45 +11,39 @@ import path from "path";
 dotenv.config();
 
 // Connect to the database
+connectDB().then(() => {
+  // Create Express app
+  const app = express();
 
+  // Middleware setup
+  app.use(cors());
+  app.use(express.json());
+  app.use(express.static(path.join(process.cwd(), "client", "build")));
 
-// Create Express app
-const app = express();
+  // Routes
+  app.use("/api/v1/product/", productRoutes);
+  app.use("/api/v1/auth/", authRoutes);
+  app.use("/api/v1/category/", categoryRoutes);
 
-// Middleware setup
-app.use(cors());
-app.use(express.json());
+  // Serve React app from the build folder
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(process.cwd(), "client", "build", "index.html"));
+  });
 
-// Serve static files from the build folder
-app.use(express.static(path.join(process.cwd(), "client", "build")));
+  // Error handling middleware
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send("Internal Server Error");
+  });
 
-// Handle requests to the root URL
-app.get("/", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "client", "build", "index.html"));
+  // Port
+  const PORT = process.env.PORT || 5000;
+
+  // Start the server
+  app.listen(PORT, () => {
+    console.log(
+      `Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
+        .white
+    );
+  });
 });
-
-// Routes
-app.use("/api/v1/product/", productRoutes);
-app.use("/api/v1/auth/", authRoutes);
-app.use("/api/v1/category/", categoryRoutes);
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Internal Server Error");
-});
-
-// Port
-const PORT = process.env.PORT || 5000;
-
-
-connectDB().then(()=>{
-app.listen(PORT, () => {
-  console.log(
-    `Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
-      .white
-  );
-});
-
-})
-// Start the server
