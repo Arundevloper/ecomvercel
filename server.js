@@ -20,14 +20,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Middleware setup
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN || "*", // Allow requests from specified origin or any origin if not provided
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specified HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specified headers
-  })
-);
 app.use(express.json());
+app.use(cors());
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(morgan("dev")); // Logging middleware
 
