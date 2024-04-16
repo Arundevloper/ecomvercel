@@ -27,15 +27,17 @@ app.use(express.static(path.join(__dirname, "./client/build")));
 // Log HTTP requests to console
 app.use(morgan("dev"));
 
-// Serve React app
-app.use("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
-});
 
 // Routes
 app.use("/api/v1/product/", productRoutes);
 app.use("/api/v1/auth/", authRoutes);
 app.use("/api/v1/category/", categoryRoutes);
+
+// Serve React app
+app.use("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+});
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
