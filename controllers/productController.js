@@ -71,7 +71,7 @@ export const getProductController = async (req, res) => {
       .limit(12)
       .sort({ createdAt: -1 });
 
-      
+      console.log("p"+products);
     res.status(200).send({
       success: true,
       counTotal: products.length,
