@@ -12,9 +12,6 @@ import { fileURLToPath } from "url";
 // Configure environment variables
 dotenv.config();
 
-// Connect to database and start server
-await connectDB(); // Wait for database connection to establish
-
 // Get current filename and directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,18 +22,20 @@ const app = express();
 // Middleware setup
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(morgan("dev")); // Logging middleware
 
 // Serve React app
+app.use(express.static(path.join(__dirname, "./client/build")));
+
+// API routes
+app.use("/api/v1/product", productRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/category", categoryRoutes);
+
+// All other routes (non-API routes) go to React app
 app.use("*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
-
-// Routes
-app.use("/api/v1/product/", productRoutes);
-app.use("/api/v1/auth/", authRoutes);
-app.use("/api/v1/category/", categoryRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -45,8 +44,18 @@ app.use((err, req, res, next) => {
 });
 
 // Port
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+// Connect to database and start server
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(
+        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+      );
+    });
+  })
+  .catch((err) => {
+    console.error("Database connection error:", err);
+    process.exit(1); // Exit with failure
+  });
