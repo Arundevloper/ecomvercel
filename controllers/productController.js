@@ -63,29 +63,14 @@ export const createProductController = async (req, res) => {
 
 //get all products
 export const getProductController = async (req, res) => {
-  try {
-    const products = await productModel
-      .find({})
-      .select("-photo")
-      .populate("category")
-      .limit(12)
-      .sort({ createdAt: -1 });
-
-      console.log("p"+products);
+ console.log("i ezuted");
     res.status(200).send({
       success: true,
       counTotal: products.length,
-      message: "ALlProducts ",
+      message: "ALlProducts is good ",
       products,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "Erorr in getting products",
-      error: error.message,
-    });
-  }
+  
 };
 
 // get single product
